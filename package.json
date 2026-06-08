@@ -1,0 +1,24 @@
+{
+  "name": "candl-parser",
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "bun run build.ts",
+    "dev": "bun run src/index.ts"
+  },
+  "devDependencies": {
+    "@types/babel__traverse": "^7.28.0",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@babel/traverse": "^7.29.7",
+    "@babel/types": "^7.29.7",
+    "@clack/prompts": "^1.5.1",
+    "@vue/compiler-sfc": "^3.5.35",
+    "picocolors": "^1.1.1"
+  }
+}

@@ -1,0 +1,91 @@
+<h2>Jak zorganizować HTML raport?</h2>
+<p class="subtitle">Trzy różne układy — każdy z innym sposobem prezentacji wyników</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="dashboard" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="font-size:11px;padding:8px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
+          <div style="background:#7f1d1d;border-radius:6px;padding:8px;text-align:center">
+            <div style="font-size:18px;font-weight:bold;color:#f87171">3</div>
+            <div style="font-size:9px;color:#fca5a5">HIGH</div>
+          </div>
+          <div style="background:#78350f;border-radius:6px;padding:8px;text-align:center">
+            <div style="font-size:18px;font-weight:bold;color:#fbbf24">8</div>
+            <div style="font-size:9px;color:#fde68a">MEDIUM</div>
+          </div>
+          <div style="background:#1e293b;border-radius:6px;padding:8px;text-align:center">
+            <div style="font-size:18px;font-weight:bold;color:#94a3b8">5</div>
+            <div style="font-size:9px;color:#64748b">LOW</div>
+          </div>
+        </div>
+        <div style="background:#1e293b;border-radius:4px;padding:6px;margin-bottom:4px">
+          <div style="font-size:10px;color:#94a3b8;margin-bottom:4px">KATEGORIE</div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span style="color:#f87171">Hydration</span><span style="color:#f87171">■■■■□ 4</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span style="color:#fbbf24">Tree-shaking</span><span style="color:#fbbf24">■■■□□ 3</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px"><span style="color:#94a3b8">Build speed</span><span style="color:#94a3b8">■■□□□ 2</span></div>
+        </div>
+        <div style="font-size:9px;color:#64748b;text-align:center">+ lista wszystkich problemów niżej</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Dashboard</h3>
+      <p>Duże liczby na górze (HIGH/MEDIUM/LOW), wykresy per kategoria, potem pełna lista. Widok menedżerski — łatwo ocenić zdrowie projektu jednym spojrzeniem.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="file-centric" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="font-size:11px;padding:8px;font-family:monospace;">
+        <div style="color:#22d3ee;font-size:10px;margin-bottom:6px">📁 composables/ (4 issues)</div>
+        <div style="margin-left:12px;margin-bottom:6px">
+          <div style="color:#93c5fd;font-size:10px">useAuth.ts</div>
+          <div style="margin-left:10px;font-size:10px;color:#f87171">▲ BUILD_CIRCULAR_DEPENDENCY — line 12</div>
+          <div style="margin-left:10px;font-size:10px;color:#fbbf24">■ COMPOSABLE_NO_LIFECYCLE — line 34</div>
+        </div>
+        <div style="margin-left:12px;margin-bottom:6px">
+          <div style="color:#93c5fd;font-size:10px">useApi.ts</div>
+          <div style="margin-left:10px;font-size:10px;color:#fbbf24">■ BUILD_HEAVY_SYNC_IMPORT — line 2</div>
+        </div>
+        <div style="color:#22d3ee;font-size:10px;margin-bottom:4px">📁 utils/ (2 issues)</div>
+        <div style="margin-left:12px">
+          <div style="color:#93c5fd;font-size:10px">index.ts</div>
+          <div style="margin-left:10px;font-size:10px;color:#fbbf24">■ TREESHAKE_BARREL_FILE</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — File-centric (tree)</h3>
+      <p>Grupowanie per plik, zagnieżdżone w strukturze folderów. Widok jak w IDE. Deweloper od razu widzi co naprawić w konkretnym pliku.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="rule-centric" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="font-size:11px;padding:8px;">
+        <div style="background:#1e293b;border-radius:4px;padding:6px;margin-bottom:5px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="color:#f87171;font-size:10px;font-weight:bold">▲ BUILD_CIRCULAR_DEPENDENCY</div>
+            <div style="background:#7f1d1d;color:#fca5a5;font-size:9px;padding:1px 5px;border-radius:3px">2 pliki</div>
+          </div>
+          <div style="color:#64748b;font-size:9px;margin-top:2px">Cykl w grafie importów spowalnia build</div>
+          <div style="margin-top:4px;font-size:9px;color:#93c5fd">→ composables/useAuth.ts · composables/useUser.ts</div>
+        </div>
+        <div style="background:#1e293b;border-radius:4px;padding:6px;margin-bottom:5px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="color:#fbbf24;font-size:10px;font-weight:bold">■ TREESHAKE_BARREL_FILE</div>
+            <div style="background:#78350f;color:#fde68a;font-size:9px;padding:1px 5px;border-radius:3px">3 pliki</div>
+          </div>
+          <div style="color:#64748b;font-size:9px;margin-top:2px">export * from utrudnia tree-shaking</div>
+          <div style="margin-top:4px;font-size:9px;color:#93c5fd">→ utils/index.ts · components/index.ts · ...</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Rule-centric</h3>
+      <p>Grupowanie per regułę — widać ile plików dotknął dany problem. Idealny gdy chcesz naprawić "wszystkie barrel files" w jednej sesji. Priorytetyzacja przez liczbę wystąpień.</p>
+    </div>
+  </div>
+
+</div>

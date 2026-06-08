@@ -1,0 +1,83 @@
+<h2>Jaki format raportu candl-parser?</h2>
+<p class="subtitle">To kluczowa decyzja — wpływa na całą architekturę reportera</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="html" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="font-size:12px;padding:10px;">
+        <div class="mock-nav" style="font-size:11px;padding:6px 10px;">🕯️ candl-parser report &nbsp;|&nbsp; <span style="color:#facc15">▲ 3 high</span> &nbsp;|&nbsp; <span style="color:#fb923c">■ 8 medium</span> &nbsp;|&nbsp; <span style="color:#94a3b8">○ 5 low</span> &nbsp;|&nbsp; <input class="mock-input" style="width:120px;font-size:11px;padding:2px 6px" placeholder="🔍 filter by file..."></div>
+        <div style="display:flex;gap:8px;padding:8px 10px;font-size:10px;">
+          <button class="mock-button" style="font-size:10px;padding:3px 8px;background:#ef4444">▲ HIGH</button>
+          <button class="mock-button" style="font-size:10px;padding:3px 8px;background:#f59e0b">■ MEDIUM</button>
+          <button class="mock-button" style="font-size:10px;padding:3px 8px;background:#334155">○ LOW</button>
+          <button class="mock-button" style="font-size:10px;padding:3px 8px;background:#334155">TREESHAKE</button>
+          <button class="mock-button" style="font-size:10px;padding:3px 8px;background:#334155">BUILD</button>
+        </div>
+        <div style="padding:0 10px;display:flex;flex-direction:column;gap:6px;">
+          <div style="background:#1e293b;border-left:3px solid #ef4444;padding:8px 10px;border-radius:4px">
+            <div style="color:#94a3b8;font-size:10px">composables/useAuth.ts</div>
+            <div style="color:#f87171;font-size:11px">▲ BUILD_CIRCULAR_DEPENDENCY</div>
+            <div style="color:#cbd5e1;font-size:10px">Circular: useAuth → useUser → useAuth</div>
+          </div>
+          <div style="background:#1e293b;border-left:3px solid #f59e0b;padding:8px 10px;border-radius:4px">
+            <div style="color:#94a3b8;font-size:10px">utils/index.ts</div>
+            <div style="color:#fbbf24;font-size:11px">■ TREESHAKE_BARREL_FILE</div>
+            <div style="color:#cbd5e1;font-size:10px">Barrel file z 14 "export * from"</div>
+          </div>
+          <div style="background:#1e293b;border-left:3px solid #64748b;padding:8px 10px;border-radius:4px">
+            <div style="color:#94a3b8;font-size:10px">pages/checkout.vue</div>
+            <div style="color:#94a3b8;font-size:11px">○ NUXT_MISSING_SEO_META</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — HTML Report</h3>
+      <p>Generuje plik <code>candl-report.html</code> otwierany w przeglądarce. Interaktywne filtrowanie, sortowanie, grupowanie. Shareable — można wysłać teamowi. Działa offline.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="tui" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="font-size:12px;padding:10px;background:#0f172a;font-family:monospace;">
+        <div style="color:#94a3b8;font-size:10px;margin-bottom:6px">🕯️ candl-parser v0.2.0 &nbsp;[↑↓ nawigacja] [f filtruj] [q wyjście]</div>
+        <div style="color:#64748b;font-size:10px;border-bottom:1px solid #334155;padding-bottom:4px;margin-bottom:6px">Filter: severity=high │ 3 wyników</div>
+        <div style="display:flex;flex-direction:column;gap:3px;">
+          <div style="background:#1e3a5f;padding:5px 8px;border-radius:3px;color:#93c5fd;font-size:11px">► composables/useAuth.ts:12</div>
+          <div style="padding:5px 8px;color:#94a3b8;font-size:10px">&nbsp;&nbsp;&nbsp;▲ BUILD_CIRCULAR_DEPENDENCY</div>
+          <div style="padding:5px 8px;color:#64748b;font-size:10px">&nbsp;&nbsp;&nbsp;utils/api.ts:7</div>
+          <div style="padding:5px 8px;color:#64748b;font-size:10px">&nbsp;&nbsp;&nbsp;pages/index.vue:3</div>
+        </div>
+        <div style="margin-top:8px;border-top:1px solid #334155;padding-top:6px;display:flex;gap:12px;font-size:10px;color:#64748b">
+          <span>[enter] szczegóły</span><span>[o] otwórz plik</span><span>[e] eksportuj</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Interaktywny TUI</h3>
+      <p>Terminal UI z klawiaturową nawigacją (Ink/blessed). Filtrowanie, sortowanie, podgląd szczegółów w terminalu. Wymaga nowej zależności (Ink/React). Doświadczenie jak w htop.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="hybrid" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup" style="font-size:11px;padding:10px;">
+        <div style="color:#94a3b8;margin-bottom:6px;font-size:10px">Terminal — podsumowanie + opcja eksportu</div>
+        <div style="background:#0f172a;padding:8px;border-radius:4px;font-family:monospace;font-size:10px;color:#cbd5e1;">
+          <div style="color:#f87171">▲ [3] HIGH &nbsp;&nbsp;<div style="width:60px;height:6px;background:#ef4444;display:inline-block;border-radius:2px;vertical-align:middle"></div></div>
+          <div style="color:#fbbf24;margin-top:3px">■ [8] MEDIUM &nbsp;<div style="width:100px;height:6px;background:#f59e0b;display:inline-block;border-radius:2px;vertical-align:middle"></div></div>
+          <div style="color:#94a3b8;margin-top:3px">○ [5] LOW</div>
+          <div style="margin-top:8px;color:#22d3ee">? Otwórz raport HTML? (y/n)</div>
+          <div style="color:#22d3ee">? Zapisz JSON? (y/n)</div>
+        </div>
+        <div style="margin-top:6px;color:#94a3b8;font-size:10px">→ otwiera candl-report.html w przeglądarce lub zapisuje candl-report.json</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Hybrid (terminal summary + HTML/JSON export)</h3>
+      <p>Terminal pokazuje zwięzłe podsumowanie z progress barami. Na końcu pyta: "Otwórz raport HTML?" / "Zapisz JSON?". HTML raport i JSON to opcjonalne wyjście — terminal pozostaje głównym UX.</p>
+    </div>
+  </div>
+
+</div>
