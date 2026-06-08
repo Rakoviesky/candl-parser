@@ -1,3 +1,9 @@
+# candl cache and reports
+.candl-cache/
+candl-report.html
+candl-report.json
+.superpowers/
+
 # dependencies (bun install)
 node_modules
 

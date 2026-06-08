@@ -1,8 +1,27 @@
 {
-  "name": "candl-parser",
+  "name": "candl",
+  "version": "0.2.0",
+  "description": "Advanced static analyzer for Nuxt 4 / Vue 3",
+  "main": "./src/index.ts",
   "module": "src/index.ts",
   "type": "module",
-  "private": true,
+  "bin": {
+    "candl": "./candl-bin"
+  },
+  "files": [
+    "src/",
+    "candl-bin"
+  ],
+  "keywords": [
+    "nuxt",
+    "vue",
+    "linter",
+    "static-analysis",
+    "nuxt4"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "bun run build.ts",
     "dev": "bun run src/index.ts"
@@ -15,6 +34,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@babel/parser": "^7.29.7",
     "@babel/traverse": "^7.29.7",
     "@babel/types": "^7.29.7",
     "@clack/prompts": "^1.5.1",

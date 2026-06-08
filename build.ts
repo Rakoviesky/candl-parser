@@ -65,9 +65,9 @@ for (const pkg of STUB_PACKAGES) {
 // 2. Zbuduj binarię
 console.log('Building binary...');
 try {
-    const result = await $`bun build --compile src/index.ts --outfile candl-parser`.quiet();
+    const result = await $`bun build --compile src/index.ts --outfile candl-bin`.quiet();
     console.log(result.stdout.toString());
-    console.log('✓ Binary built: candl-parser');
+    console.log('✓ Binary built: candl-bin');
 } catch (err: any) {
     console.error('Build failed:\n' + err.stderr?.toString());
     cleanup();
