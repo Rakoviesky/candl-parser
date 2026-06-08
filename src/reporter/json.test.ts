@@ -16,8 +16,9 @@ describe('buildReportData', () => {
         expect(data.meta.filesFromCache).toBe(3);
         expect(data.summary.total).toBe(1);
         expect(data.summary.bySeverity.high).toBe(1);
-        expect(data.issues[0].code).toBe('BUILD_CIRCULAR_DEPENDENCY');
-        expect(data.issues[0].filePath).toBe('/project/composables/useAuth.ts');
+        expect(data.issues.length).toBeGreaterThan(0);
+        expect(data.issues[0]!.code).toBe('BUILD_CIRCULAR_DEPENDENCY');
+        expect(data.issues[0]!.filePath).toBe('/project/composables/useAuth.ts');
     });
 
     test('handles empty results', () => {
