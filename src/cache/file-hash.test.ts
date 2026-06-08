@@ -1,5 +1,5 @@
 import { test, expect, describe, beforeEach, afterEach } from 'bun:test';
-import { computeFileHash, getChangedFiles } from './file-hash';
+import { computeFileHash, getChangedFiles, buildHashSnapshot } from './file-hash';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
@@ -57,5 +57,24 @@ describe('getChangedFiles', () => {
         fs.writeFileSync(f, 'const x = 1;');
         const result = await getChangedFiles([f], { [f]: 'old-hash-abc' });
         expect(result.changed).toContain(f);
+    });
+});
+
+describe('buildHashSnapshot', () => {
+    test('returns empty object for empty file list', async () => {
+        const snapshot = await buildHashSnapshot([]);
+        expect(snapshot).toEqual({});
+    });
+
+    test('returns hash for each file', async () => {
+        const f1 = path.join(tmpDir, 'a.ts');
+        const f2 = path.join(tmpDir, 'b.ts');
+        fs.writeFileSync(f1, 'const x = 1;');
+        fs.writeFileSync(f2, 'const y = 2;');
+        const snapshot = await buildHashSnapshot([f1, f2]);
+        expect(Object.keys(snapshot)).toHaveLength(2);
+        expect(snapshot[f1]).toHaveLength(64);
+        expect(snapshot[f2]).toHaveLength(64);
+        expect(snapshot[f1]).not.toBe(snapshot[f2]);
     });
 });
