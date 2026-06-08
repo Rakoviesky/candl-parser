@@ -90,7 +90,7 @@ export function generateHtmlReport(data: ReportData): string {
 <script>const REPORT_DATA = ${jsonData};</script>
 
 <div class="header">
-  <h1>candl-parser</h1>
+  <h1>🕯️ candl-parser</h1>
   <span style="color:#64748b;font-size:14px">· ${meta.project} · ${meta.date.split('T')[0]}</span>
   <span class="meta">${meta.filesScanned} plików · ${meta.filesFromCache} z cache</span>
 </div>
@@ -115,14 +115,14 @@ export function generateHtmlReport(data: ReportData): string {
     ${categoryCheckboxes}
     <hr>
     <button class="btn" style="width:100%;margin-bottom:6px" onclick="toggleGrouping()">Grupuj: <span id="group-label">plik</span></button>
-    <button class="btn" style="width:100%" onclick="exportJson()">JSON</button>
+    <button class="btn" style="width:100%" onclick="exportJson()">⬇ JSON</button>
   </div>
 
   <div class="issues">
     <div class="toolbar">
-      <input id="search-input" placeholder="szukaj pliku, kodu, tresci..." oninput="applyFilters()">
-      <button class="btn" onclick="sortBy('severity')">Severity</button>
-      <button class="btn" onclick="sortBy('file')">Plik</button>
+      <input id="search-input" placeholder="🔍 szukaj pliku, kodu, tresci..." oninput="applyFilters()">
+      <button class="btn" onclick="sortBy('severity')">↕ Severity</button>
+      <button class="btn" onclick="sortBy('file')">↕ Plik</button>
     </div>
     <div id="count-label"></div>
     <div id="issue-list"></div>
@@ -188,7 +188,7 @@ function renderIssues() {
         const byFile = {};
         filtered.forEach(i => { (byFile[i.filePath] = byFile[i.filePath] || []).push(i); });
         list.innerHTML = Object.entries(byFile).map(([file, issues]) =>
-            '<div class="group-header">' + file + '</div>' +
+            '<div class="group-header">📄 ' + file + '</div>' +
             issues.map(renderIssueHtml).join('')
         ).join('');
     } else {
