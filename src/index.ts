@@ -78,7 +78,7 @@ async function main() {
     const tsFiles = findTypeScriptFiles(targetPath);
     const composableFiles = findComposableFiles(targetPath);
     const storeFiles = findStoreFiles(targetPath);
-    const allFilesForAnalysis = [...vueFiles, ...tsFiles];
+    const allFilesForAnalysis = [...vueFiles, ...tsFiles, ...composableFiles];
     const { changed: changedFiles, unchanged: unchangedFiles } =
         await getChangedFiles(allFilesForAnalysis, prevHashCache);
     const changedSet = new Set(changedFiles);
