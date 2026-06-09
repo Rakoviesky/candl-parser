@@ -36,14 +36,23 @@ const NUXT_ROUTER_AUTO_IMPORTS = new Set(['useRouter', 'useRoute', 'useLink']);
 
 const HEAVY_COMPONENT_PATTERN = /Modal|Drawer|Dialog|Panel|Overlay|Sheet|Popover/;
 
+// Wszystkie hooki Vue 3 które wykonują się TYLKO po stronie klienta (nigdy na serwerze)
+const CLIENT_ONLY_HOOKS = new Set([
+    'onMounted', 'onBeforeMount',
+    'onUnmounted', 'onBeforeUnmount',
+    'onUpdated', 'onBeforeUpdate',
+    'onActivated', 'onDeactivated',
+    'onErrorCaptured', 'onRenderTracked', 'onRenderTriggered',
+]);
+
 function isInsideClientGuard(path: any): boolean {
     let current = path.parentPath;
     while (current) {
-        // onMounted(() => { ... }) — węzeł jest wewnątrz callbacku onMounted
+        // onMounted(() => { ... }), onBeforeUnmount(() => { ... }), itp.
         if (
             t.isCallExpression(current.node) &&
             t.isIdentifier(current.node.callee) &&
-            (current.node.callee.name === 'onMounted' || current.node.callee.name === 'onUnmounted')
+            CLIENT_ONLY_HOOKS.has(current.node.callee.name)
         ) {
             return true;
         }
@@ -212,7 +221,7 @@ export function analyzeVueFile(filePath: string, source: string): AnalysisResult
                 anomalies.push({
                     code: 'HYDRATION_BROWSER_GLOBAL',
                     severity: 'high',
-                    message: `Dostęp do '${path.node.object.name}' poza onMounted lub process.client guard. Spowoduje hydration mismatch w SSR.`
+                    message: `Dostęp do '${path.node.object.name}' poza hookiem cyklu życia lub process.client guard — spowoduje hydration mismatch w SSR.`
                 });
             }
         },
@@ -227,7 +236,8 @@ export function analyzeVueFile(filePath: string, source: string): AnalysisResult
                 t.isIdentifier(callee.object) &&
                 NON_DETERMINISTIC_OBJECTS.has(callee.object.name) &&
                 t.isIdentifier(callee.property) &&
-                (NON_DETERMINISTIC_CALLS.has(callee.property.name) || callee.property.name === 'now')
+                (NON_DETERMINISTIC_CALLS.has(callee.property.name) || callee.property.name === 'now') &&
+                !isInsideClientGuard(path)
             ) {
                 const key = `${callee.object.name}.${callee.property.name}`;
                 if (!detectedNonDeterministic.has(key)) {
@@ -253,7 +263,11 @@ export function analyzeVueFile(filePath: string, source: string): AnalysisResult
 
         // --- HYDRATION_NON_DETERMINISTIC: new Date() ---
         NewExpression(path: any) {
-            if (t.isIdentifier(path.node.callee) && path.node.callee.name === 'Date') {
+            if (
+                t.isIdentifier(path.node.callee) &&
+                path.node.callee.name === 'Date' &&
+                !isInsideClientGuard(path)
+            ) {
                 if (!detectedNonDeterministic.has('new Date')) {
                     detectedNonDeterministic.add('new Date');
                     anomalies.push({
