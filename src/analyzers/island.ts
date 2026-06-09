@@ -156,21 +156,21 @@ export function analyzeIsland(filePath: string, source: string): FileAnalysisRes
             anomalies.push({
                 code: 'ISLAND_MISUSE',
                 severity: 'high',
-                message: `Wyspa używa reaktywnego stanu (${scriptAnalysis.reactiveNames.join(', ')}) — wyspy Nuxt są renderowane tylko na serwerze i nie obsługują client-side reactivity.`,
+                message: `Island uses reactive state (${scriptAnalysis.reactiveNames.join(', ')}) — Nuxt islands are server-only and do not support client-side reactivity.`,
             });
         }
         if (scriptAnalysis?.hasClientLifecycle) {
             anomalies.push({
                 code: 'ISLAND_MISUSE',
                 severity: 'high',
-                message: `Wyspa używa lifecycle hooks (${scriptAnalysis.lifecycleNames.join(', ')}) — nie są wywoływane w server-only wyspach.`,
+                message: `Island uses lifecycle hooks (${scriptAnalysis.lifecycleNames.join(', ')}) — these are never called in server-only islands.`,
             });
         }
         if (templateAnalysis.hasInteractiveHandlers) {
             anomalies.push({
                 code: 'ISLAND_MISUSE',
                 severity: 'high',
-                message: `Wyspa ma interaktywne event handlery (@${templateAnalysis.handlerNames.join(', @')}) — wyspy są server-only, eventy nie działają po stronie klienta.`,
+                message: `Island has interactive event handlers (@${templateAnalysis.handlerNames.join(', @')}) — islands are server-only, events won't fire on the client.`,
             });
         }
     } else {
@@ -184,13 +184,13 @@ export function analyzeIsland(filePath: string, source: string): FileAnalysisRes
         if (noReactivity && noLifecycle && noInteraction) {
             const hasServerData = scriptAnalysis.hasServerData;
             const extra = hasServerData
-                ? ' Komponent pobiera dane przez useAsyncData/useFetch — szczególnie dobry kandydat na wyspę.'
+                ? ' Component fetches data via useAsyncData/useFetch — a particularly good island candidate.'
                 : '';
 
             anomalies.push({
                 code: 'ISLAND_CANDIDATE',
                 severity: 'low',
-                message: `Komponent nie ma reaktywności, lifecycle hooks ani interaktywnych event handlerów — rozważ konwersję na *.island.vue (server component) dla lepszej wydajności.${extra}`,
+                message: `Component has no reactivity, lifecycle hooks or interactive event handlers — consider converting to *.island.vue (server component) for better performance.${extra}`,
             });
         }
     }

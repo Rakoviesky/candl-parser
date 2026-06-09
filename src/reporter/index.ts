@@ -16,21 +16,20 @@ export async function runReporter(
 
     if (data.summary.total === 0) return;
 
-    const openHtml = await confirm({ message: 'Otwórz raport HTML w przeglądarce?' });
+    const openHtml = await confirm({ message: 'Open HTML report in browser?' });
     if (openHtml === true) {
         const htmlPath = path.join(targetDir, 'candl-report.html');
         saveHtmlReport(data, htmlPath);
-        // Otwórz w przeglądarce — cross-platform
         const opener = process.platform === 'win32' ? 'start'
             : process.platform === 'darwin' ? 'open' : 'xdg-open';
         Bun.spawn([opener, htmlPath]);
-        console.log(pc.dim(`  → zapisano: ${path.relative(process.cwd(), htmlPath)}`));
+        console.log(pc.dim(`  → saved: ${path.relative(process.cwd(), htmlPath)}`));
     }
 
-    const saveJson = await confirm({ message: 'Zapisz candl-report.json?' });
+    const saveJson = await confirm({ message: 'Save candl-report.json?' });
     if (saveJson === true) {
         const jsonPath = path.join(targetDir, 'candl-report.json');
         saveJsonReport(data, jsonPath);
-        console.log(pc.dim(`  → zapisano: ${path.relative(process.cwd(), jsonPath)}`));
+        console.log(pc.dim(`  → saved: ${path.relative(process.cwd(), jsonPath)}`));
     }
 }

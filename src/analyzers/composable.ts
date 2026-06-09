@@ -89,7 +89,7 @@ export function analyzeComposableFile(filePath: string, source: string): FileAna
                 anomalies.push({
                     code: 'COMPOSABLE_PURE_TRANSFORM',
                     severity: 'low',
-                    message: `Composable '${funcName}' nie używa żadnego Vue API — to czysta transformacja danych. Przenieś do utils/ jako zwykłą funkcję.`
+                    message: `Composable '${funcName}' uses no Vue API — it's a pure data transform. Move to utils/ as a plain function.`
                 });
                 return;
             }
@@ -98,7 +98,7 @@ export function analyzeComposableFile(filePath: string, source: string): FileAna
                 anomalies.push({
                     code: 'COMPOSABLE_NO_REACTIVITY',
                     severity: 'medium',
-                    message: `Composable '${funcName}' nie używa reaktywności (ref/reactive/computed/watch). Sprawdź czy naprawdę potrzebuje być composable.`
+                    message: `Composable '${funcName}' has no reactivity (ref/reactive/computed/watch). Verify it actually needs to be a composable.`
                 });
             }
 
@@ -106,7 +106,7 @@ export function analyzeComposableFile(filePath: string, source: string): FileAna
                 anomalies.push({
                     code: 'COMPOSABLE_NO_LIFECYCLE',
                     severity: 'medium',
-                    message: `Composable '${funcName}' ma reaktywność ale nie rejestruje żadnych lifecycle hooks. Upewnij się, że cleanup (onUnmounted) jest obsługiwany.`
+                    message: `Composable '${funcName}' has reactivity but no lifecycle hooks. Ensure cleanup (onUnmounted) is handled.`
                 });
             }
         }

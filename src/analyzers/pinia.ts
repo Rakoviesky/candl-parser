@@ -193,13 +193,13 @@ export function analyzePiniaProject(
             anomalies.push({
                 code: 'PINIA_UNUSED_STORE',
                 severity: 'high',
-                message: `Store '${store.storeId}' nie jest używany w żadnym pliku projektu. Rozważ usunięcie.`
+                message: `Store '${store.storeId}' is not used anywhere in the project. Consider removing it.`
             });
         } else if (store.consumerCount === 1) {
             anomalies.push({
                 code: 'PINIA_SINGLE_CONSUMER',
                 severity: 'low',
-                message: `Store '${store.storeId}' jest używany tylko w 1 miejscu. Rozważ przeniesienie logiki do lokalnego composable.`
+                message: `Store '${store.storeId}' is used in only 1 place. Consider moving the logic to a local composable.`
             });
         }
 
@@ -209,13 +209,13 @@ export function analyzePiniaProject(
                     ? 'PINIA_SHOULD_BE_UTILITY'
                     : 'PINIA_NO_STATE',
                 severity: 'medium',
-                message: `Store '${store.storeId}' nie zawiera reaktywnego stanu — tylko akcje. Przenieś do zwykłego modułu utility lub composable.`
+                message: `Store '${store.storeId}' has no reactive state — actions only. Move to a utility module or composable.`
             });
         } else if (!store.hasState) {
             anomalies.push({
                 code: 'PINIA_NO_STATE',
                 severity: 'medium',
-                message: `Store '${store.storeId}' nie ma reaktywnego stanu. Sprawdź czy użycie Pinia jest uzasadnione.`
+                message: `Store '${store.storeId}' has no reactive state. Check whether using Pinia is justified here.`
             });
         }
 

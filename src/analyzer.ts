@@ -116,14 +116,14 @@ function analyzeTemplate(descriptor: any, filePath: string, anomalies: Anomaly[]
                             anomalies.push({
                                 code: 'HYDRATION_NO_FALLBACK',
                                 severity: 'medium',
-                                message: `Dyrektywa v-if="process.client" bez v-else lub fallback. SSR wyrenderuje pusty element — ryzyko hydration mismatch.`
+                                message: `v-if="process.client" without v-else or fallback — SSR will render an empty element, risking hydration mismatch.`
                             });
                         }
 
                         anomalies.push({
                             code: 'HYDRATION_MISSING_CLIENT_ONLY',
                             severity: 'medium',
-                            message: `Użycie v-if="${expSource.trim()}" zamiast komponentu <ClientOnly>. Rozważ opakowanie w <ClientOnly> dla bezpiecznego renderowania.`
+                            message: `v-if="${expSource.trim()}" used instead of <ClientOnly>. Wrap in <ClientOnly> for safe SSR rendering.`
                         });
                     }
                 }
@@ -221,7 +221,7 @@ export function analyzeVueFile(filePath: string, source: string): AnalysisResult
                 anomalies.push({
                     code: 'HYDRATION_BROWSER_GLOBAL',
                     severity: 'high',
-                    message: `Dostęp do '${path.node.object.name}' poza hookiem cyklu życia lub process.client guard — spowoduje hydration mismatch w SSR.`
+                    message: `Access to '${path.node.object.name}' outside a lifecycle hook or process.client guard — will cause hydration mismatch in SSR.`
                 });
             }
         },
@@ -245,7 +245,7 @@ export function analyzeVueFile(filePath: string, source: string): AnalysisResult
                     anomalies.push({
                         code: 'HYDRATION_NON_DETERMINISTIC',
                         severity: 'high',
-                        message: `Wywołanie '${key}()' generuje różne wartości na serwerze i kliencie — ryzyko hydration mismatch.`
+                        message: `'${key}()' produces different values on server and client — hydration mismatch risk.`
                     });
                 }
             }
@@ -273,7 +273,7 @@ export function analyzeVueFile(filePath: string, source: string): AnalysisResult
                     anomalies.push({
                         code: 'HYDRATION_NON_DETERMINISTIC',
                         severity: 'high',
-                        message: `'new Date()' generuje różne wartości na serwerze i kliencie — ryzyko hydration mismatch.`
+                        message: `'new Date()' produces different values on server and client — hydration mismatch risk.`
                     });
                 }
             }
@@ -294,7 +294,7 @@ export function analyzeVueFile(filePath: string, source: string): AnalysisResult
                     anomalies.push({
                         code: 'NUXT_MANUAL_IMPORT',
                         severity: 'low',
-                        message: `Zbędny import z '${source}': { ${manuallyImported.join(', ')} } — Nuxt 4 auto-importuje te symbole.`
+                        message: `Unnecessary import from '${source}': { ${manuallyImported.join(', ')} } — Nuxt 4 auto-imports these symbols.`
                     });
                 }
             }
@@ -307,7 +307,7 @@ export function analyzeVueFile(filePath: string, source: string): AnalysisResult
                         anomalies.push({
                             code: 'NUXT_MISSING_ASYNC_COMPONENT',
                             severity: 'low',
-                            message: `Komponent '${name}' jest importowany synchronicznie. Rozważ defineAsyncComponent(() => import('...')) dla lepszego code-splitting.`
+                            message: `Component '${name}' is synchronously imported. Consider defineAsyncComponent(() => import('...')) for better code-splitting.`
                         });
                     }
                 }
@@ -321,7 +321,7 @@ export function analyzeVueFile(filePath: string, source: string): AnalysisResult
             anomalies.push({
                 code: 'UNUSED_DEEP_REACTIVITY',
                 severity: 'medium',
-                message: `Zmienna '${refName}' jest ref(), ale jej wartość (.value) nie jest mutowana. Zmień na const lub shallowRef().`
+                message: `'${refName}' is declared as ref() but its .value is never mutated. Use const or shallowRef() instead.`
             });
         }
     }
@@ -332,14 +332,14 @@ export function analyzeVueFile(filePath: string, source: string): AnalysisResult
             anomalies.push({
                 code: 'NUXT_MISSING_PAGE_META',
                 severity: 'medium',
-                message: `Strona nie zawiera definePageMeta(). Zdefiniuj meta dane strony (title, layout, middleware) dla poprawnego SEO i routingu.`
+                message: `Page is missing definePageMeta(). Define page meta (title, layout, middleware) for correct SEO and routing.`
             });
         }
         if (!hasSeoMeta) {
             anomalies.push({
                 code: 'NUXT_MISSING_SEO_META',
                 severity: 'low',
-                message: `Strona nie zawiera useSeoMeta() ani useHead(). Dodaj meta tagi (title, description, og:image) dla SEO.`
+                message: `Page is missing useSeoMeta() or useHead(). Add meta tags (title, description, og:image) for SEO.`
             });
         }
     }

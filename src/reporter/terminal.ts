@@ -28,9 +28,9 @@ export function renderCategoryBars(summary: ReportSummary): string {
 export function renderDiffLine(diff: CacheDiff | null): string {
     if (!diff || (diff.added === 0 && diff.fixed === 0)) return '';
     const parts: string[] = [];
-    if (diff.added > 0) parts.push(pc.red(`↑ +${diff.added} nowe`));
-    if (diff.fixed > 0) parts.push(pc.green(`↓ -${diff.fixed} naprawione`));
-    return `  ${parts.join('  ')}  ${pc.dim('(vs. poprzednie skanowanie)')}`;
+    if (diff.added > 0) parts.push(pc.red(`↑ +${diff.added} new`));
+    if (diff.fixed > 0) parts.push(pc.green(`↓ -${diff.fixed} fixed`));
+    return `  ${parts.join('  ')}  ${pc.dim('(vs. previous scan)')}`;
 }
 
 export function printTerminalSummary(
@@ -39,8 +39,8 @@ export function printTerminalSummary(
     filesFromCache: number,
     diff: CacheDiff | null,
 ): void {
-    const cacheNote = filesFromCache > 0 ? pc.dim(` (${filesFromCache} pominiętych z cache)`) : '';
-    console.log(`\n  Przeanalizowano ${pc.bold(String(filesScanned))} plików${cacheNote}\n`);
+    const cacheNote = filesFromCache > 0 ? pc.dim(` (${filesFromCache} from cache)`) : '';
+    console.log(`\n  Analysed ${pc.bold(String(filesScanned))} files${cacheNote}\n`);
     console.log(renderCategoryBars(summary));
 
     const diffLine = renderDiffLine(diff);
@@ -48,7 +48,7 @@ export function printTerminalSummary(
 
     const total = summary.total;
     const severityNote = summary.bySeverity.high > 0
-        ? pc.red(`${total} problemów`)
-        : total > 0 ? pc.yellow(`${total} problemów`) : pc.green('0 problemów');
-    console.log(`\n  Znaleziono ${severityNote} do optymalizacji.\n`);
+        ? pc.red(`${total} issue${total !== 1 ? 's' : ''}`)
+        : total > 0 ? pc.yellow(`${total} issue${total !== 1 ? 's' : ''}`) : pc.green('0 issues');
+    console.log(`\n  Found ${severityNote} to address.\n`);
 }

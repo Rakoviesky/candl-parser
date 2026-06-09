@@ -61,7 +61,7 @@ function analyzeFileForTreeShaking(filePath: string, source: string): Anomaly[] 
                 anomalies.push({
                     code: 'TREESHAKE_WILDCARD_IMPORT',
                     severity: 'medium',
-                    message: `Wildcard import "import * as X from '${src}'" uniemożliwia tree-shaking — użyj named imports.`,
+                    message: `Wildcard import "import * as X from '${src}'" prevents tree-shaking — use named imports instead.`,
                 });
             }
 
@@ -70,7 +70,7 @@ function analyzeFileForTreeShaking(filePath: string, source: string): Anomaly[] 
                 anomalies.push({
                     code: 'TREESHAKE_SIDE_EFFECT_IMPORT',
                     severity: 'low',
-                    message: `Side-effect import "import '${src}'" może blokować tree-shaking — przenieś do plugins/ lub dodaj "sideEffects": false w package.json.`,
+                    message: `Side-effect import "import '${src}'" may block tree-shaking — move to plugins/ or add "sideEffects": false in package.json.`,
                 });
             }
         },
@@ -80,7 +80,7 @@ function analyzeFileForTreeShaking(filePath: string, source: string): Anomaly[] 
         anomalies.unshift({
             code: 'TREESHAKE_BARREL_FILE',
             severity: 'medium',
-            message: `Barrel file z ${barrelExportCount} "export * from" — utrudnia tree-shaking w Vite/Rollup. Użyj named re-exports: export { X } from '...'.`,
+            message: `Barrel file with ${barrelExportCount} "export * from" — hurts tree-shaking in Vite/Rollup. Use named re-exports: export { X } from '...'.`,
         });
     }
 

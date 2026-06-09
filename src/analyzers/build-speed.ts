@@ -104,7 +104,7 @@ function analyzeFileImports(filePath: string, fileSet: Set<string>): FileAnalysi
                     heavyAnomalies.push({
                         code: 'BUILD_HEAVY_SYNC_IMPORT',
                         severity: 'medium',
-                        message: `Ciężka biblioteka "${pkg}" importowana przez ${importStyle} import — spowolni bundle. Użyj named imports: import { ... } from '${pkg}'.`,
+                        message: `Heavy library "${pkg}" imported via ${importStyle} import — will bloat the bundle. Use named imports: import { ... } from '${pkg}'.`,
                     });
                 }
             }
@@ -199,7 +199,7 @@ function detectDuplicateImportSpread(
                 anomalies: [{
                     code: 'BUILD_DUPLICATE_IMPORT_SPREAD',
                     severity: 'low',
-                    message: `Moduł importowany w ${count} plikach — rozważ Nuxt plugin lub composable jako singleton dla lepszego code-splitting.`,
+                    message: `Module imported in ${count} files — consider a Nuxt plugin or singleton composable for better code-splitting.`,
                 }],
             });
         }

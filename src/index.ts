@@ -21,12 +21,12 @@ async function main() {
     intro(pc.bgRed(pc.black('🕯️ Candl-Parser v0.2.0 ')));
 
     let target = await select({
-        message: 'Wybierz katalog do analizy architektonicznej:',
+        message: 'Select directory to analyse:',
         options: [
-            { value: '.', label: 'Cały obecny projekt (ROOT)' },
-            { value: 'custom', label: 'Wpisz własny katalog', hint: 'np. ./src/components' },
-            { value: './components', label: 'Tylko folder /components' },
-            { value: './pages', label: 'Tylko folder /pages' },
+            { value: '.', label: 'Entire project (ROOT)' },
+            { value: 'custom', label: 'Enter custom path', hint: 'e.g. ./src/components' },
+            { value: './components', label: '/components only' },
+            { value: './pages', label: '/pages only' },
         ],
     });
 
@@ -34,8 +34,8 @@ async function main() {
 
     if (target === 'custom') {
         const customPath = await text({
-            message: 'Podaj relatywną ścieżkę do projektu:',
-            placeholder: 'np. apps/vehis-pl lub ./packages/ui',
+            message: 'Enter relative path to project:',
+            placeholder: 'e.g. apps/my-app or ./packages/ui',
             initialValue: '.',
         });
         if (typeof customPath !== 'string') process.exit(0);
@@ -50,7 +50,7 @@ async function main() {
 
     const s = spinner();
     // @ts-ignore
-    s.start(`Skanowanie katalogu: ${pc.cyan(target)} ...`);
+    s.start(`Scanning directory: ${pc.cyan(target)} ...`);
 
     await new Promise(resolve => setTimeout(resolve, 800));
 
@@ -58,12 +58,12 @@ async function main() {
     try {
         vueFiles = findVueFiles(targetPath);
     } catch {
-        s.stop(pc.red('Nie znaleziono katalogu! Upewnij się, że jesteś w projekcie Nuxt/Vue.'));
+        s.stop(pc.red('Directory not found! Make sure you are inside a Nuxt/Vue project.'));
         process.exit(1);
     }
 
     if (vueFiles.length === 0) {
-        s.stop(pc.yellow('Nie znaleziono żadnych plików .vue do analizy.'));
+        s.stop(pc.yellow('No .vue files found to analyse.'));
         process.exit(0);
     }
 
@@ -120,9 +120,9 @@ async function main() {
     const buildSpeedResults: FileAnalysisResult[] = analyzeBuildSpeed(allFilesForAnalysis);
 
     s.stop(
-        `Przeanalizowano ${pc.bold(String(vueFiles.length))} .vue, ` +
+        `Analysed ${pc.bold(String(vueFiles.length))} .vue, ` +
         `${pc.bold(String(tsFiles.length))} .ts` +
-        (unchangedFiles.length > 0 ? pc.dim(` (${unchangedFiles.length} z cache)`) : '')
+        (unchangedFiles.length > 0 ? pc.dim(` (${unchangedFiles.length} from cache)`) : '')
     );
 
     // Zbierz wszystkie wyniki (nowe + z cache)
@@ -144,7 +144,7 @@ async function main() {
             const icon = anomaly.severity === 'high' ? pc.red('▲') : anomaly.severity === 'medium' ? pc.yellow('■') : pc.dim('○');
             message += `${icon} [${anomaly.code}] ${anomaly.message}\n`;
         });
-        if (message) note(message.trim(), pc.yellow(`Plik: ${relativePath}`));
+        if (message) note(message.trim(), pc.yellow(`File: ${relativePath}`));
     });
 
     // Zbuduj ReportData
